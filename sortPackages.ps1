@@ -15,9 +15,9 @@ If not specified, the script defaults to "packages.txt".
 .\SortPackages.ps1 "my_file.txt"
 #>
 
-function Sort-File {
+function SortPackages {
     param (
-        [Parameter(Position=0)]
+        [Parameter(Position = 0)]
         [string]$filename = "packages.txt"
     )
 
@@ -62,5 +62,11 @@ function Sort-File {
     $sortedLines | Out-File -FilePath $filename
 }
 
-# Get the filename from command-line arguments and pass it to the function
-Sort-File -filename $args[0]
+# If a filename was provided as a command-line argument, pass it to the function
+# Otherwise, call the function without a filename argument to use its default value
+if ($args.Count -gt 0) {
+    SortPackages -filename $args[0]
+}
+else {
+    SortPackages
+}
