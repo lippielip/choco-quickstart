@@ -24,8 +24,14 @@ if ($local) {
     $packages = Get-Content -Path .\packages.txt | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne "" }
 }
 else {
-    # Download packages.txt, split lines, and store the list of packages in $packages, excluding comment lines and empty lines
-    $packages = (Invoke-WebRequest -Uri $packagesUrl).Content.Split([Environment]::NewLine) | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne "" }
+    # Try to download packages.txt
+    try {
+        $packages = (Invoke-WebRequest -Uri $packagesUrl).Content.Split([Environment]::NewLine) | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne "" }
+    }
+    catch {
+        Write-Host "Error: Failed to download packages.txt from $packagesUrl. If you're trying to install packages from a local file, run this script with the -local flag."
+        exit 1
+    }
 }
 
 foreach ($package in $packages) {
