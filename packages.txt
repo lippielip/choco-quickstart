@@ -4,7 +4,6 @@
 # Gaming
 ea-app
 epicgameslauncher
-fanatec-driver
 goggalaxy
 steam
 ubisoft-connect
