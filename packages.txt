@@ -1,4 +1,11 @@
-git
-vscode
+# Multimedia
+discord
 firefox
+
+# Programming
+git
 python
+vscode
+
+# Gaming
+steam

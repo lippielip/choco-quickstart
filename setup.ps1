@@ -20,11 +20,11 @@ $packagesUrl = 'https://raw.githubusercontent.com/lippielip/choco-quickstart/mas
 
 # Check if script is run with -local argument
 if ($local) {
-    # Read packages from local file
-    $packages = Get-Content -Path .\packages.txt
+    # Read packages from local file, excluding comment lines and empty lines
+    $packages = Get-Content -Path .\packages.txt | Where-Object {$_ -notmatch '^\s*#' -and $_.Trim() -ne ""}
 } else {
-    # Download packages.txt and store the list of packages in $packages
-    $packages = (Invoke-WebRequest -Uri $packagesUrl).Content.Split([Environment]::NewLine)
+    # Download packages.txt, split lines, and store the list of packages in $packages, excluding comment lines and empty lines
+    $packages = (Invoke-WebRequest -Uri $packagesUrl).Content.Split([Environment]::NewLine) | Where-Object {$_ -notmatch '^\s*#' -and $_.Trim() -ne ""}
 }
 
 foreach ($package in $packages) {
