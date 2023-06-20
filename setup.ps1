@@ -26,7 +26,11 @@ if ($local) {
 else {
     # Try to download packages.txt
     try {
-        $packages = (Invoke-WebRequest -Uri $packagesUrl).Content.Split([Environment]::NewLine) | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne "" }
+        # Download packages.txt, convert to UTF8, remove BOM if present, split lines, and store the list of packages in $packages, excluding comment lines and empty lines
+        $rawPackages = Invoke-WebRequest -Uri $packagesUrl
+        $utf8PackagesContent = [System.Text.Encoding]::UTF8.GetString([System.Text.Encoding]::Default.GetBytes($rawPackages.Content))
+        $bomFreePackagesContent = $utf8PackagesContent.TrimStart([System.Text.Encoding]::UTF8.GetPreamble())
+        $packages = $bomFreePackagesContent.Split([Environment]::NewLine) | Where-Object { $_ -notmatch '^\s*#' -and $_.Trim() -ne "" }
     }
     catch {
         Write-Host "Error: Failed to download packages.txt from $packagesUrl. If you're trying to install packages from a local file, run this script with the -local flag."
